@@ -1,13 +1,21 @@
 #lang racket
 
-(define (fsplit fnum . delims)
-  (rsplit (file->string (string-join (list "./input/" (number->string fnum) ".txt") ""))
-          delims))
+(define (fsplit fnum . splits)
+  (rsplit ;;(list
+           (file->string
+            (string-join (list "./input/" (number->string fnum) ".txt") ""));;)
+          splits))
 
-(define (rsplit s delims)
-  (cond [(empty? delims) s]
-        [else (map (lambda (chunk) (rsplit chunk (cdr delims)))
-                   (string-split s (car delims)))]))
+;; each split is either a string delimiter or a procedure taking a string and returning a list of strings
+;; final split arg can return anything
+;; list, list -> ?
+
+(define (rsplit l splits)
+  (cond [(empty? splits) l]
+        ;; [(procedure? (first splits)) (map (lambda (chunk) (rsplit chunk (cdr splits)))
+        ;;                                   (apply (car splits) (list l)))]
+        [(string? (first splits)) (map (lambda (chunk) (rsplit chunk (cdr splits)))
+                                       (string-split l (car splits)))]))
 
 ;; (rsplit "iaiaiaibiaiaiaibiaiaiaiciaiaiaibiaiaiaibiaiaiaiciaiaiaiaiibiaiaiaic" (list "c" "b" "a"))
 ;; (fsplit 2 "\n" " ")
@@ -19,3 +27,5 @@
         [else (cons (take l n) (chunk-list (list-tail l n) n))]))
 
 (provide (all-defined-out))
+
+;; (fsplit 4 "\n" "," "-" )
