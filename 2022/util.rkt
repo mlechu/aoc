@@ -33,6 +33,8 @@
   (build-vector (vector-length v)
                 (lambda (i) (vector-ref v (- (sub1 (vector-length v)) i)))))
 
+(define (vector-modref vec i) (vector-ref vec (modulo i (vector-length vec))))
+
 ;; fuck
 (define (string->numbers s) (map string->number (filter non-empty-string? (string-split s ""))))
 
