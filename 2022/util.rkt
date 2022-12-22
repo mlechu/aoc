@@ -18,11 +18,16 @@
         [(string? (car splits))
          (map (lambda (chunk) (rsplit chunk (cdr splits)))
               (string-split s (car splits)))]))
+
 (define (chunk-list l n)
   (cond [(zero? n) (/ 1 0)]
         [(empty? l) '()]
         [(< (length l) n) (list l)]
         [else (cons (take l n) (chunk-list (list-tail l n) n))]))
+
+(define (flatten1 l) (foldr (λ (e out) (if (list? e)
+                                           (append e out)
+                                           (cons e out))) '() l))
 
 (define (vector-set vec pos el)
   (vector-append (vector-take vec pos)
